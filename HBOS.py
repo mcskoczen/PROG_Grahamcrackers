@@ -23,7 +23,7 @@ import matplotlib.font_manager
 import pandas as pd
 
 #getting the data from the sheet, I think
-df = pd.read_csv("LCCC_munged_Dec18_system_memory.csv")
+df = pd.read_csv("LCCC_munged_Dec18_system_memory1.csv")
 
 # Import model
 from pyod.models.hbos import HBOS
