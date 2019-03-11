@@ -29,8 +29,13 @@ class Computer:
     self.host = host
     self.cpu_total = cpu_total
 
-df = pd.read_csv("cpu1.csv")
-#assigning to df stores it as dataframe, cpu1 has underscores instead of . 
+d = {}
+for x in range(3):
+  df = pd.read_csv("cpu" + str(x) + ".csv")
+  
+  d[x] = df
+#creating a loop to read files and assign them to dataframes with a value of x where x is the number of files
+
 
 listOfWorkstations = []
 
@@ -41,4 +46,6 @@ for index in range(length):
 
 outliers_fraction = 10/162 
 
-print(df)
+print(d[0])
+print(d[1])
+print(d[2])
