@@ -1,18 +1,3 @@
-
-# Author: Yue Zhao <yuezhao@cs.toronto.edu>
-# License: BSD 2 clause
-
-from __future__ import division
-from __future__ import print_function
-
-import os
-import sys
-
-# temporary solution for relative imports in case pyod is not installed
-# if pyod is installed, no need to use the following line
-sys.path.append(
-  os.path.abspath(os.path.join(os.path.dirname("__file__"), '..')))
-
 # suppress warnings for clean output
 import warnings
 warnings.filterwarnings("ignore")
@@ -31,48 +16,56 @@ class Computer:
     self.cpu_total = cpu_total
     self.HBOS = HBOS
 
-d = {}
 topten= {}
 for x in range(3):
   df = pd.read_csv("cpu" + str(x) + ".csv")
   
-  d[x] = df
-#creating a loop to read files and assign them to dataframes with a value of x where x is the number of files
+  #creating a loop to read files and assign them to dataframes with a value of x where x is the number of files
+  #The loop is unnecessary if you aren't going to do things a bunch of times with each thing
+  
+  timestamp = str(df['X_timestamp'].min()) + " - " + str(df['X_timestamp'].max())
+  
+  #var0 = cpu_total
 
-#var0 = cpu_total
+  listOfWorkstations = []
 
-listOfWorkstations = []
+  length = len(df)
+  N = int(math.sqrt(length - 1)) 
+  w = length % N
+  if w > 0:
+    N = N + 1
+  # N is the square root of the number of workstations, this is the variable to be changed based on the number of workstations when being scaled up for larger production
+  df['HBOS'] = 0
 
-length = len(df)
-N = int(math.sqrt(length - 1)) 
-w = length % N
-if w > 0:
-  N = N + 1
-
-# N is the square root of the number of workstations, this is the variable to be changed based on the number of workstations when being scaled up for larger production
-for index in range(length):
+  for index in range(length):
     listOfWorkstations.append(Computer(df.loc[index].enrichment_branch_name, df.loc[index].beat_hostname, df.loc[index].system_cpu_total_pct, HBOS = 0))
-
-numberofvariables = 1
-#create a thing where we call a number to get a string where string is the names of variables
-for stuff in range(numberofvariables):
-  #variable[stuff] -> math thingies
-  #sort by value
-  for x in range(13):
-    #object[x].HBOS =  object[x].HBOS + log10(N*(object[12].var+str(stuff) - object[0].variablename))
     pass
-  for x in range(13,26):
-    #object[x].HBOS = object[x].HBOS + log10(N*(object[25].variablename - object[13].variablename))
+    #remember to add all of the calls to the dataframe for each variable we use
+
+  nameslist = df.columns
+  numberofvariables = len(nameslist)
+
+  for stuff in range(numberofvariables - 1):
+    #variable[stuff] -> math thingies
+    df.sort_values(by = nameslist[stuff])
+    for x in range(13):
+      a = df.loc[12][stuff]
+      b = df.loc[0][stuff]
+      c = df.loc[x][numberofvariables]
+      d = a - b
+      e = N * d
+      f = c + math.log10(e)
+      df[x][numberofvariables] = f
+      #df.loc[x].HBOS =  c + math.log10(N*(a - b))
+    for x in range(13,26):
+      #df[x].HBOS = df[x].HBOS + math.log10(N*(df[25].variablename - df[13].variablename))
+      pass
+    for x in range(26,39):
+      #df[x].HBOS = math.log10 
+      pass
     pass
-  for x in range(26,39):
-    #object[x].variablename = log 
-    pass 
-  pass
-
-outliers_fraction = 10/162 
-
-print(d[0])
-print(d[1])
-print(d[2])
-
-print(d[0].system_cpu_system_pct)
+  print(df)
+  print(timestamp)
+  print(nameslist)
+  #df.to_csv('HBOS_topten_fortime.csv')
+  
