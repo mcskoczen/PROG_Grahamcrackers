@@ -45,35 +45,14 @@ for x in range(1):
 
   nameslist = [df.columns]
   numberofvariables = len(nameslist)
-  N = 13
 
   for stuff in range(5, numberofvariables + 1):
     df.sort_values(by = nameslist[stuff])
-    for x in range(13):
-     HBOS[x] = HBOS[x] + math.log10(N*(df[12][stuff] - df[0][stuff]))
-    for x in range(13,26):
-      HBOS[x] = HBOS[x] + math.log10(N*(df[25][stuff] - df[13][stuff]))
-    for x in range(26,39):
-      HBOS[x] = HBOS[x] + math.log10(N*(df[38][stuff] - df[26][stuff]))
-    for x in range(39,52):
-      HBOS[x] = HBOS[x] + math.log10(N*(df[51][stuff] - df[39][stuff]))
-    for x in range(52,65):
-      HBOS[x] = HBOS[x] + math.log10(N*(df[64][stuff] - df[52][stuff]))
-    for x in range(65,88):
-      HBOS[x] = HBOS[x] + math.log10(N*(df[87][stuff] - df[65][stuff]))
-    for x in range(88,101):
-      HBOS[x] = HBOS[x] + math.log10(N*(df[100][stuff] - df[88][stuff]))
-    for x in range(101,114):
-      HBOS[x] = HBOS[x] + math.log10(N*(df[113][stuff] - df[101][stuff]))
-    for x in range(114,127):
-      HBOS[x] = HBOS[x] + math.log10(N*(df[126][stuff] - df[114][stuff]))
-    for x in range(127,140):
-      HBOS[x] = HBOS[x] + math.log10(N*(df[139][stuff] - df[127][stuff]))
-    for x in range(140,153):
-      HBOS[x] = HBOS[x] + math.log10(N*(df[152][stuff] - df[140][stuff]))
-    for x in range(153,161):
-      HBOS[x] = HBOS[x] + math.log10(N*(df[160][stuff] - df[153][stuff]))
-
+    for x in range(length):
+     b = int(x/N) + 1
+     c = b * N
+     HBOS[x] = HBOS[x] + math.log10(N*(df[c - 1][stuff] - df[0][stuff]))
+    
   df['HBOS'] = HBOS
   print(df.HBOS)
   print(timestamp)
