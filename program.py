@@ -30,7 +30,7 @@ for num in range(1):
   numberofcolumns = len(nameslist)
   #finding how many columns there are
   
-  df.insert(numberofcolumns, 'HBOS', [0]*length)
+  df.insert(numberofcolumns, 'HBOS', [0.0]*length)
   #creating a new column in the dataframe called HBOS
 
   for stuff in range(4, numberofcolumns - 1):
@@ -47,13 +47,17 @@ for num in range(1):
      
      t = c - N
      #setting the beginning of the bin
-    
-    if (c == N*N):
-      c = length
-      t = N * (N - 1)
+     
+     if (c == N*N):
+       c = length
+       t = N * (N - 1)
       #in order to account for the last bin being too short, we make sure c and t are both the correct value for the final bin
     
-    df.iloc[x,2] == df[x][2] + math.log10(N*(df[c][stuff] - df[t][stuff]))
+     z = df[x][2] + math.log10(N*(df[c][stuff] - df[t][stuff]))
+      #doing the math to find the HBOS vallue by takin the base 10 logarithm of N times the difference of the values 
+      #of the end of the bin and the beginning of the bin and adding it to the previous value of the HBOS algorithm 
+    
+     df.set_value(x, 'HBOS', z)
 
   print(df.HBOS)
 
