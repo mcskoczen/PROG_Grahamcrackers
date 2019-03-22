@@ -39,23 +39,23 @@ for num in range(1):
     #sorting the dataframe by the values of the dataframe
     
     for x in range(length):
-     b = int(x/N) + 1
+     a = int(x/N) + 1
      #determining which bin we're in
      
-     c = b * N
+     b = a * N
      #setting the endpoint of the bin
      
-     t = c - N
+     c = b - N
      #setting the beginning of the bin
      
-     if (c == N*N):
-       c = length
-       t = N * (N - 1)
+     if (b == N*N):
+       b = length
+       c = N * (N - 1)
       #in order to account for the last bin being too short, we make sure c and t are both the correct value for the final bin
     
-     z = df[x][2] + math.log10(N*(df[c][stuff] - df[t][stuff]))
-      #doing the math to find the HBOS vallue by takin the base 10 logarithm of N times the difference of the values 
-      #of the end of the bin and the beginning of the bin and adding it to the previous value of the HBOS algorithm 
+     z = df[x][2] + math.log10(N*(df[b][stuff] - df[c][stuff]))
+     #doing the math to find the HBOS vallue by takin the base 10 logarithm of N times the difference of the values 
+     #of the end of the bin and the beginning of the bin and adding it to the previous value of the HBOS algorithm 
     
      df.set_value(x, 'HBOS', z)
 
