@@ -11,7 +11,9 @@ for num in range(1):
   #creating a loop to read files and assign them to dataframes with a value of x where x is the number of files
   #The loop is unnecessary if you aren't going to do things a bunch of times with each thing
   
-  timestamp = "between " + str(df['X_timestamp'].min()) + " and " + str(df['X_timestamp'].max())
+  minimum = df['X_timestamp'].min() * 0.00001
+  maximum = df["X_timestamp"].max() * 0.00001
+  timestamp = "between " + str(minimum) + " and " + str(maximum)
 
   length = len(df)
   
@@ -24,21 +26,18 @@ for num in range(1):
     N = N + 1
   #if the number of workstations isn't a perfect square, then we adjust for that by acting as if it is a subset of a larger square
 
+  numberofcolumns = len(df.columns)
+  #finding how many columns there are
+  
   nameslist = df.columns
   #creating a list of all the names of the columns
-
-
-  numberofcolumns = len(nameslist)
-  #finding how many columns there are
-
-  print(numberofcolumns)
 
   df.insert(numberofcolumns, 'HBOS', [0.0]*length)
   #creating a new column in the dataframe called HBOS
 
-  for stuff in range(4, numberofcolumns - 1):
+  for numeral in range(5, numberofcolumns):
     
-    df.sort_values(by = nameslist[stuff])
+    df.sort_values(by = 'system_memory_swap_free')
     #sorting the dataframe by the values of the dataframe
     
     for x in range(length):
@@ -56,14 +55,17 @@ for num in range(1):
        c = N * (N - 1)
       #in order to account for the last bin being too short, we make sure c and t are both the correct value for the final bin
     
-     z=3
+     u = 3
+     v = 1
      #z = df[x][2] + math.log10(N*(df[b][stuff] - df[c][stuff]))
+     
+     z = math.log10(N*(u - v))
      #doing the math to find the HBOS vallue by takin the base 10 logarithm of N times the difference of the values 
-     #of the end of the bin and the beginning of the bin and adding it to the previous value of the HBOS algorithm
-         
+     #of the end of the bin and the beginning of the bin and adding it to the previous value of the HBOS algorithm 
+    
      df.set_value(x, 'HBOS', z)
 
-  print(df.HBOS)
+  print()
 
   print("This is for the time interval " + timestamp)
   #df.to_csv('HBOS_topten_fortime' + timestamp + '.csv')
