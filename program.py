@@ -24,12 +24,15 @@ for num in range(1):
     N = N + 1
   #if the number of workstations isn't a perfect square, then we adjust for that by acting as if it is a subset of a larger square
 
-  nameslist = [df.columns]
+  nameslist = df.columns
   #creating a list of all the names of the columns
+
 
   numberofcolumns = len(nameslist)
   #finding how many columns there are
-  
+
+  print(numberofcolumns)
+
   df.insert(numberofcolumns, 'HBOS', [0.0]*length)
   #creating a new column in the dataframe called HBOS
 
@@ -53,10 +56,11 @@ for num in range(1):
        c = N * (N - 1)
       #in order to account for the last bin being too short, we make sure c and t are both the correct value for the final bin
     
-     z = df[x][2] + math.log10(N*(df[b][stuff] - df[c][stuff]))
+     z=3
+     #z = df[x][2] + math.log10(N*(df[b][stuff] - df[c][stuff]))
      #doing the math to find the HBOS vallue by takin the base 10 logarithm of N times the difference of the values 
-     #of the end of the bin and the beginning of the bin and adding it to the previous value of the HBOS algorithm 
-    
+     #of the end of the bin and the beginning of the bin and adding it to the previous value of the HBOS algorithm
+         
      df.set_value(x, 'HBOS', z)
 
   print(df.HBOS)
