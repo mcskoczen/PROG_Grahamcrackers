@@ -11,7 +11,9 @@ for num in range(1):
   #creating a loop to read files and assign them to dataframes with a value of x where x is the number of files
   #The loop is unnecessary if you aren't going to do things a bunch of times with each thing
   
-  timestamp = "between " + str(df['X_timestamp'].min()) + " and " + str(df['X_timestamp'].max())
+  minimum = df['X_timestamp'].min() * 0.0001
+  maximum = df["X_timestamp"].max() * 0.0001
+  timestamp = "between " + str(minimum) + " and " + str(maximum)
 
   length = len(df)
 
