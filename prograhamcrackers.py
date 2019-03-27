@@ -13,6 +13,8 @@ for num in range(1):
   
   minimum = df['X_timestamp'].min() * 0.0001
   maximum = df["X_timestamp"].max() * 0.0001
+  minimum = round(minimum, 3)
+  maximum = round(maximum, 3)
   timestamp = "between " + str(minimum) + " and " + str(maximum)
 
   length = len(df)
@@ -35,11 +37,11 @@ for num in range(1):
   df.insert(numberofcolumns, 'HBOS', [0.0]*length)
   #creating a new column in the dataframe called HBOS
 
-  for varindex in range(4, numberofcolumns - 1):
+  for varindex in range(4, numberofcolumns):
     
     df.sort_values(by = nameslist[varindex])
     #sorting the dataframe by the values of the dataframe
-    
+
     for x in range(length):
      a = int(x/N) + 1
      #determining which bin we're in
@@ -57,17 +59,16 @@ for num in range(1):
       #in order to account for the last bin being too short, we make sure c and t are both the correct value for the final bin
      
      
-     g = df[length][varindex]
-     j = df[N* (N-1)][varindex]
+     g = df.iat[b, varindex]
+     j = df.iat[c, varindex]
 
-     #z=3
-     z = df[x][2] + math.log10(N*(g - j))
+     z = df.at[x, "HBOS"] + math.log10(N*(g - j))
      #doing the math to find the HBOS vallue by takin the base 10 logarithm of N times the difference of the values 
      #of the end of the bin and the beginning of the bin and adding it to the previous value of the HBOS algorithm
          
-     df.iat[x, numberofcolumns] = z
+     df.at[x, "HBOS"] = z
 
-  print(df.HBOS)
+  print()
 
   print("This is for the time interval " + timestamp)
   #df.to_csv('HBOS_topten_fortime' + timestamp + '.csv')
