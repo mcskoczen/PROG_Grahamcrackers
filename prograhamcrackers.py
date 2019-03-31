@@ -41,6 +41,8 @@ for num in range(1):
     
     df.sort_values(by = nameslist[varindex], ascending = True)
     #sorting the dataframe by the values of the dataframe
+    beg = 0
+    end = 0
 
     for x in range(length):
      a = int(x/N)
@@ -51,12 +53,24 @@ for num in range(1):
        a + 1
      #determining which bin we're in
      
-     b = a * N
+     b = (a * N) - 1
      #setting the endpoint of the bin
      
      c = b - N
      #setting the beginning of the bin
 
+     if c < 0:
+       c = 0
+     #for the first bin the math ends up a bit weird because of the way arrays work
+
+     if (c < beg and b > beg):
+       c = beg
+       b = end
+     if (c == beg and b == end and x > b):
+       c = end
+       b = end + N
+       beg = c
+       end = b
 
      bad = N * N
      if (b == bad):
@@ -78,6 +92,8 @@ for num in range(1):
        b = b + 1
        g = df.iat[b, varindex]
        k = g - j
+       beg = b
+       end = b + N
 
      z = df.at[x, "HBOS"] + math.log10(k/N)
      #doing the math to find the HBOS vallue by takin the base 10 logarithm of N times the difference of the values 
