@@ -5,11 +5,11 @@ import matplotlib.font_manager
 import pandas as pd
 import math
 
-for num in range(1):
-  df = pd.read_csv("computer" + str(num) + ".csv")
+for file_index in range(1):
+  df = pd.read_csv("computer" + str(file_index) + ".csv")
   
   #creating a loop to read files and assign them to dataframes with a value of x where x is the number of files
-  #The loop is unnecessary if you aren't going to do things a bunch of times with each thing
+  #The loop is unnecessary if you aren't going to read in multiple sheets consecutively
   
   minimum = df['X_timestamp'].min() * 0.0001
   maximum = df["X_timestamp"].max() * 0.0001
@@ -17,86 +17,109 @@ for num in range(1):
   maximum = round(maximum, 3)
   timestamp = "between " + str(minimum) + " and " + str(maximum)
 
-  length = len(df)
+  row_count = len(df)
+  print("The number of rows in df is: ")
+  print(row_count)
 
-  N = int(math.sqrt(length - 1)) 
+  N = int(math.sqrt(row_count)) 
+  #I removed the -1, don't remember why it was there but gave us N=12
+  print("The square root of the number of workstations is: ")
+  print(N)
   # N is the square root of the number of workstations, this is the variable to be changed based on the number of workstations when being scaled up for larger production
   # We want N to be an integer to simplify the math being done later
+  # N is how many values go in each bin, except when there are > N of same value for a variable 
   
-  w = length % N
+  w = row_count % N
+  print("The number of rows mod N equals: ")
+  print(w)
+  #mod function divides row_count by N, returns remainder, if perfect square, will be 0. else, will be > 0.
   if w > 0:
     N = N + 1
   #if the number of workstations isn't a perfect square, then we adjust for that by acting as if it is a subset of a larger square
 
-  nameslist = df.columns
+  list_of_columns = df.columns
   #creating a list of all the names of the columns
 
-  numberofcolumns = len(nameslist)
-  #finding how many columns there are
+  column_count = len(list_of_columns)
 
-  df.insert(numberofcolumns, 'HBOS', [0.0]*length)
-  #creating a new column in the dataframe called HBOS
+  #finding how many columns there are, here 20
 
-  for varindex in range(4, numberofcolumns):
+  df.insert(column_count, 'HBOS', [0.0]*row_count)
+  #creating a new column in the dataframe called HBOS, populating with 0.0
+
+  for var_index in range(4, column_count):
     
-    df.sort_values(by = nameslist[varindex], ascending = True)
-    #sorting the dataframe by the values of the dataframe
+    df = df.sort_values(by = list_of_columns[var_index], ascending = True)
+    #sorting the dataframe by the values of the variable in ascending order
     beg = 0
     end = 0
+    bin_start = 0
+    bin_end = N - 1
 
-    for x in range(length):
-     a = int(x/N)
-
-     if x % N != 0:
-       a + 1
-     if x == 0:
-       a + 1
-     #determining which bin we're in
+    for x in range(20):
+     if df.iat[x, var_index] == 0:
+       bin_start = x + 1
+       continue
      
-     b = (a * N) - 1
-     #setting the endpoint of the bin
-     
-     c = b - N
+     if x > bin_end:
+       bin_start = bin_end
      #setting the beginning of the bin
+     #bin_start is the workstation index whose value will be used in calculations
+     print("bin_start equals the following: ")
+     print(bin_start)
+     
+     
+     bin_end = bin_start + N
+     #we always want the bin to contain 13 values
+     if bin_end> (row_count):
+       bin_end = row_count
+     #unless the last bin would try to call on values that don't exist
 
-     if c < 0:
-       c = 0
-     #for the first bin the math ends up a bit weird because of the way arrays work
+     #setting the endpoint of the bin, minus 1 accounts for us having a row 0
+     #bin_end is the workstation index whose value will be used in calculations
+     print("bin_end equals the following: ")
+     print(bin_end) 
+     
+     
 
-     if (c < beg and b > beg):
-       c = beg
-       b = end
-     if (c == beg and b == end and x > b):
-       c = end
-       b = end + N
-       beg = c
-       end = b
+    #  if bin_start < 0:
+    #    bin_start = 0
+    #  for the first bin the math ends up a bit weird because of the way arrays work
 
-     bad = N * N
-     if (b == bad):
-       b = length -1
-       c = length % N
-       c = length - c
+    #  if (bin_start < beg and bin_end > beg):
+    #    bin_start = beg
+    #    bin_end = end
+    #  if (bin_start == beg and bin_end == end and x > bin_end):
+    #    bin_start = end
+    #    bin_end = end + N
+    #    beg = bin_start
+    #    end = bin_end
+
+     #if (bin_num == N):
+       #bin_end = row_count -1
       #in order to account for the last bin being too short, we make sure c and t are both the correct value for the final bin
      
      
-     g = df.iat[b, varindex]
-     j = df.iat[c, varindex]
+     g = df.iat[bin_end, var_index]
+     j = df.iat[bin_start, var_index]
+     
      k = g - j
+     print("The width of this bin is: ")
+     print(k)
 
      if k <= 0 :
        print(g)
        print(j)
      
-     while k == 0:
-       b = b + 1
-       g = df.iat[b, varindex]
+     while k == 0 and x != ( N * N - 1) :
+       bin_end = bin_end + 1
+       g = df.iat[bin_end, var_index]
        k = g - j
-       beg = b
-       end = b + N
+       beg = bin_end
+       end = bin_end + N
 
-     z = df.at[x, "HBOS"] + math.log10(k/N)
-     #doing the math to find the HBOS vallue by takin the base 10 logarithm of N times the difference of the values 
+     z = 3 #df.at[x, "HBOS"] + math.log10(k/N)
+     #doing the math to find the HBOS vallue by taking the base 10 logarithm of N times the difference of the values 
      #of the end of the bin and the beginning of the bin and adding it to the previous value of the HBOS algorithm
          
      df.at[x, "HBOS"] = z
