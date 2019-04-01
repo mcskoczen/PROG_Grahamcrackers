@@ -63,9 +63,6 @@ for file_index in range(1):
        bin_start = bin_end
      #setting the beginning of the bin
      #bin_start is the workstation index whose value will be used in calculations
-     print("bin_start equals the following: ")
-     print(bin_start)
-     
      
      if bin_start != 0:
        bin_end = bin_start + N
@@ -73,31 +70,8 @@ for file_index in range(1):
      if bin_end > (row_count - 1):
        bin_end = row_count - 1
      #unless the last bin would try to call on values that don't exist
-
      #setting the endpoint of the bin, minus 1 accounts for us having a row 0
      #bin_end is the workstation index whose value will be used in calculations
-     print("bin_end equals the following: ")
-     print(bin_end) 
-     
-     
-
-    #  if bin_start < 0:
-    #    bin_start = 0
-    #  for the first bin the math ends up a bit weird because of the way arrays work
-
-    #  if (bin_start < beg and bin_end > beg):
-    #    bin_start = beg
-    #    bin_end = end
-    #  if (bin_start == beg and bin_end == end and x > bin_end):
-    #    bin_start = end
-    #    bin_end = end + N
-    #    beg = bin_start
-    #    end = bin_end
-
-     #if (bin_num == N):
-       #bin_end = row_count -1
-      #in order to account for the last bin being too short, we make sure c and t are both the correct value for the final bin
-     
      
      g = df.iat[bin_end, var_index]
      j = df.iat[bin_start, var_index]
