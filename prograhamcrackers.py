@@ -51,12 +51,10 @@ for file_index in range(1):
     
     df = df.sort_values(by = list_of_columns[var_index], ascending = True)
     #sorting the dataframe by the values of the variable in ascending order
-    beg = 0
-    end = 0
     bin_start = 0
     bin_end = N - 1
 
-    for x in range(20):
+    for x in range(row_count):
      if df.iat[x, var_index] == 0:
        bin_start = x + 1
        continue
@@ -69,10 +67,11 @@ for file_index in range(1):
      print(bin_start)
      
      
-     bin_end = bin_start + N
+     if bin_start != 0:
+       bin_end = bin_start + N
      #we always want the bin to contain 13 values
-     if bin_end> (row_count):
-       bin_end = row_count
+     if bin_end > (row_count - 1):
+       bin_end = row_count - 1
      #unless the last bin would try to call on values that don't exist
 
      #setting the endpoint of the bin, minus 1 accounts for us having a row 0
@@ -107,18 +106,7 @@ for file_index in range(1):
      print("The width of this bin is: ")
      print(k)
 
-     if k <= 0 :
-       print(g)
-       print(j)
-     
-     while k == 0 and x != ( N * N - 1) :
-       bin_end = bin_end + 1
-       g = df.iat[bin_end, var_index]
-       k = g - j
-       beg = bin_end
-       end = bin_end + N
-
-     z = 3 #df.at[x, "HBOS"] + math.log10(k/N)
+     z = df.at[x, "HBOS"] + math.log10(k/N)
      #doing the math to find the HBOS vallue by taking the base 10 logarithm of N times the difference of the values 
      #of the end of the bin and the beginning of the bin and adding it to the previous value of the HBOS algorithm
          
