@@ -47,7 +47,7 @@ for file_index in range(1):
   df.insert(column_count, 'HBOS', [0.0]*row_count)
   #creating a new column in the dataframe called HBOS, populating with 0.0
 
-  for var_index in range(4, column_count):
+  for var_index in range(3, column_count):
     
     df = df.sort_values(by = list_of_columns[var_index], ascending = True)
     #sorting the dataframe by the values of the variable in ascending order
