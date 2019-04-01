@@ -22,28 +22,22 @@ for file_index in range(1):
   print(row_count)
 
   N = int(math.sqrt(row_count)) 
-  #I removed the -1, don't remember why it was there but gave us N=12
-  print("The square root of the number of workstations is: ")
-  print(N)
   # N is the square root of the number of workstations, this is the variable to be changed based on the number of workstations when being scaled up for larger production
   # We want N to be an integer to simplify the math being done later
   # N is how many values go in each bin, except when there are > N of same value for a variable 
   
   w = row_count % N
-  print("The number of rows mod N equals: ")
-  print(w)
-  #mod function divides row_count by N, returns remainder, if perfect square, will be 0. else, will be > 0.
+  #The modulo function divides row_count by N, returns remainder, if perfect square, will be 0. else, will be > 0.
   if w > 0:
     N = N + 1
   #if the number of workstations isn't a perfect square, then we adjust for that by acting as if it is a subset of a larger square
-
+  
   list_of_columns = df.columns
   #creating a list of all the names of the columns
 
   column_count = len(list_of_columns)
-
   #finding how many columns there are, here 20
-
+  
   df.insert(column_count, 'HBOS', [0.0]*row_count)
   #creating a new column in the dataframe called HBOS, populating with 0.0
 
@@ -77,15 +71,16 @@ for file_index in range(1):
      j = df.iat[bin_start, var_index]
      
      k = g - j
-     print("The width of this bin is: ")
      print(k)
 
      z = df.at[x, "HBOS"] + math.log10(k/N)
      #doing the math to find the HBOS vallue by taking the base 10 logarithm of N times the difference of the values 
      #of the end of the bin and the beginning of the bin and adding it to the previous value of the HBOS algorithm
-         
+     print(z)
      df.at[x, "HBOS"] = z
 
+  df = df.sort_values(by = "HBOS")
+  print(df.HBOS)
   print("This is for the time interval " + timestamp)
   #df.to_csv('HBOS_topten_fortime' + timestamp + '.csv')
   
