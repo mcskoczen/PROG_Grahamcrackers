@@ -41,7 +41,7 @@ for file_index in range(1):
   df.insert(column_count, 'HBOS', [0.0]*row_count)
   #creating a new column in the dataframe called HBOS, populating with 0.0
 
-  for var_index in range(3, column_count):
+  for var_index in range(4, column_count):
     
     df = df.sort_values(by = list_of_columns[var_index], ascending = True)
     #sorting the dataframe by the values of the variable in ascending order
@@ -71,12 +71,20 @@ for file_index in range(1):
      j = df.iat[bin_start, var_index]
      
      k = g - j
-     print(k)
+     if k == 0:
+       print("The problem bin is in the column labelled " + list_of_columns[var_index])
+       print("The problem bin starts at workstation " +str(bin_start) + " with a value of " + str(j))
+       print("and ends at workstation "+ str(bin_end)+ " with a value of " + str(g))
 
+     while k <= 0:
+       bin_end = bin_end + 1
+       g = df.iat[bin_end, var_index]
+       j = df.iat[bin_start, var_index]
+       k = g - j
+       
      z = df.at[x, "HBOS"] + math.log10(k/N)
      #doing the math to find the HBOS vallue by taking the base 10 logarithm of N times the difference of the values 
      #of the end of the bin and the beginning of the bin and adding it to the previous value of the HBOS algorithm
-     print(z)
      df.at[x, "HBOS"] = z
 
   df = df.sort_values(by = "HBOS")
