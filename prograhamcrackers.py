@@ -15,9 +15,10 @@ for file_index in range(1):
   maximum = df["X_timestamp"].max() * 0.0001
   minimum = round(minimum, 3)
   maximum = round(maximum, 3)
-  timestamp = "between " + str(minimum) + " and " + str(maximum)
+  timestamp = "between " + str(minimum) + " and " + str(maximum) + str(file_index)
 
   row_count = len(df)
+  urow_count = row_count - 1
   print("The number of rows in df is: " + str(row_count))
 
   N = int(math.sqrt(row_count)) 
@@ -30,7 +31,8 @@ for file_index in range(1):
   if w > 0:
     N = N + 1
   #if the number of workstations isn't a perfect square, then we adjust for that by acting as if it is a subset of a larger square
-  
+  Reset_Val = N
+
   list_of_columns = df.columns
   #creating a list of all the names of the columns
 
@@ -46,12 +48,13 @@ for file_index in range(1):
     #sorting the dataframe by the values of the variable in ascending order
     bin_start = 0
     bin_end = N - 1
-    
+    bad = False
+    print(list_of_columns[var_index])
     for x in range(row_count):
      if df.iat[x, var_index] == 0:
        bin_start = x + 1
        continue
-     
+     N = Reset_Val
      if x > bin_end:
        bin_start = bin_end
      #setting the beginning of the bin
@@ -60,8 +63,8 @@ for file_index in range(1):
      if bin_start != 0:
        bin_end = bin_start + N
      #we always want the bin to contain 13 values
-     if bin_end > (row_count - 1):
-       bin_end = row_count - 1
+     if bin_end > (urow_count):
+       bin_end = urow_count - 1
      #unless the last bin would try to call on values that don't exist
      #setting the endpoint of the bin, minus 1 accounts for us having a row 0
      #bin_end is the workstation index whose value will be used in calculations
@@ -70,6 +73,7 @@ for file_index in range(1):
      j = df.iat[bin_start, var_index]
      
      k = g - j
+
      if k == 0:
        print("The problem bin is in the column labelled " + list_of_columns[var_index])
        print("It starts at workstation " +str(bin_start) + " with a value of " + str(j))
@@ -77,13 +81,29 @@ for file_index in range(1):
 
      while k == 0:
        bin_end = bin_end + 1
+       if bin_end > (urow_count) :
+         bad = True
+         continue
+
        g = df.iat[bin_end, var_index]
        j = df.iat[bin_start, var_index]
        k = g - j
+       N = N + 1
+       check_b = urow_count
+       check = df.iat[check_b, var_index]
+       if g == check:
+         bin_end = urow_count
+         N = bin_end - bin_start
+
        if k != 0:
          print("and ends at workstation "+ str(bin_end)+ " with a value of " + str(g))    
      
-     z = df.at[x, "HBOS"] + math.log10(k/N)
+     if bad == True:
+       bad = False
+       print(" and could not be fixed")
+       continue
+     y = math.log10(k/N)
+     z = df.at[x, "HBOS"] + y
      #doing the math to find the HBOS vallue by taking the base 10 logarithm of N times the difference of the values 
      #of the end of the bin and the beginning of the bin and adding it to the previous value of the HBOS algorithm
      df.at[x, "HBOS"] = z
@@ -91,5 +111,5 @@ for file_index in range(1):
   df = df.sort_values(by = "HBOS", ascending = False)
   print(df.HBOS)
   print("This is for the time interval " + timestamp)
-  #df.to_csv('HBOS_topten_fortime' + timestamp + '.csv')
+  df.to_csv('HBOS_topten_fortime' + timestamp + '.csv')
   
