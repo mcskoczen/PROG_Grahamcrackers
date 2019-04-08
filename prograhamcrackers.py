@@ -62,9 +62,10 @@ for file_index in range(1):
      #setting the beginning and end of the bin
      #bin_start is the workstation index whose value will be used in calculations
      #we always want the bin to contain 13 values, barring certain circumstances
-     
+
      if bin_end > (urow_count):
-       bin_end = urow_count - 1
+       bin_end = urow_count
+       N = bin_end - bin_start
      #unless the last bin would try to call on values that don't exist
      #setting the endpoint of the bin, minus 1 accounts for us having a row 0
      #bin_end is the workstation index whose value will be used in calculations
@@ -81,14 +82,12 @@ for file_index in range(1):
 
      while k == 0:
        bin_end = bin_end + 1
-       if bin_end > (urow_count) :
-         bad = True
-         continue
-
+       N = N + 1
+       
        g = df.iat[bin_end, var_index]
        j = df.iat[bin_start, var_index]
        k = g - j
-       N = N + 1
+       
        check_b = urow_count
        check = df.iat[check_b, var_index]
        if g == check:
@@ -98,10 +97,6 @@ for file_index in range(1):
        if k != 0:
          print("and ends at workstation "+ str(bin_end)+ " with a value of " + str(g))    
      
-     if bad == True:
-       bad = False
-       print(" and could not be fixed")
-       continue
      y = math.log10(k/N)
      z = df.at[x, "HBOS"] + y
      #doing the math to find the HBOS vallue by taking the base 10 logarithm of N times the difference of the values 
