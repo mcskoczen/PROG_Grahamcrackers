@@ -41,7 +41,6 @@ for file_index in range(1):
   
   df.insert(column_count, 'HBOS', [0.0]*row_count)
   #creating a new column in the dataframe called HBOS, populating with 0.0
-
   for var_index in range(3, column_count):
     
     df = df.sort_values(by = list_of_columns[var_index], ascending = True)
@@ -49,14 +48,15 @@ for file_index in range(1):
     bin_start = 0
     bin_end = N - 1
     bad = False
-    print(list_of_columns[var_index])
+    N = Reset_Val
     for x in range(row_count):
      if df.iat[x, var_index] == 0:
        bin_start = x + 1
        continue
-     N = Reset_Val
+     
      if x > bin_end:
        bin_start = bin_end
+       N = Reset_Val
      #setting the beginning of the bin
      #bin_start is the workstation index whose value will be used in calculations
      
