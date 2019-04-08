@@ -4,7 +4,8 @@ import matplotlib.pyplot as plt
 import matplotlib.font_manager
 import pandas as pd
 import math
-
+pd.set_option('display.max_rows', 2000)
+pd.set_option('display.max_columns', 30)
 for file_index in range(1):
   df = pd.read_csv("computer" + str(file_index) + ".csv")
   
@@ -47,8 +48,9 @@ for file_index in range(1):
     #sorting the dataframe by the values of the variable in ascending order
     bin_start = 0
     bin_end = N - 1
-    bad = False
     N = Reset_Val
+    df.to_csv('HBOS for' + list_of_columns[var_index - 1])
+
     for x in range(row_count):
      if df.iat[x, var_index] == 0:
        bin_start = x + 1
@@ -98,13 +100,14 @@ for file_index in range(1):
          print("and ends at workstation "+ str(bin_end)+ " with a value of " + str(g))    
      
      y = math.log10(k/N)
-     z = df.at[x, "HBOS"] + y
+     z = df.at[x, "HBOS"]
+     H_val = y + z
      #doing the math to find the HBOS vallue by taking the base 10 logarithm of N times the difference of the values 
      #of the end of the bin and the beginning of the bin and adding it to the previous value of the HBOS algorithm
-     df.at[x, "HBOS"] = z
+     df.at[x, "HBOS"] = H_val
 
   df = df.sort_values(by = "HBOS", ascending = False)
-  print(df.HBOS)
+  print(df)
   print("This is for the time interval " + timestamp)
   df.to_csv('HBOS_topten_fortime' + timestamp + '.csv')
   
