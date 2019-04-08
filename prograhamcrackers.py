@@ -52,17 +52,17 @@ for file_index in range(1):
     for x in range(row_count):
      if df.iat[x, var_index] == 0:
        bin_start = x + 1
+       bin_end = bin_end + 1
        continue
      
      if x > bin_end:
        bin_start = bin_end
        N = Reset_Val
-     #setting the beginning of the bin
-     #bin_start is the workstation index whose value will be used in calculations
-     
-     if bin_start != 0:
        bin_end = bin_start + N
-     #we always want the bin to contain 13 values
+     #setting the beginning and end of the bin
+     #bin_start is the workstation index whose value will be used in calculations
+     #we always want the bin to contain 13 values, barring certain circumstances
+     
      if bin_end > (urow_count):
        bin_end = urow_count - 1
      #unless the last bin would try to call on values that don't exist
