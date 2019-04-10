@@ -14,12 +14,13 @@ for file_index in range(1):
   #creating a loop to read files and assign them to dataframes with a value of x where x is the number of files
   #The loop is unnecessary if you aren't going to read in multiple sheets consecutively
   
-  minimum = df['X_timestamp'].min() * 0.0001
+  heyyyy = '''minimum = df['X_timestamp'].min() * 0.0001
   maximum = df["X_timestamp"].max() * 0.0001
   minimum = round(minimum, 3)
   maximum = round(maximum, 3)
-  timestamp = "between " + str(minimum) + " and " + str(maximum) + str(file_index)
+  timestamp = "between " + str(minimum) + " and " + str(maximum) + str(file_index)'''
 
+  timestamp = "1"
   row_count = len(df)
   urow_count = row_count - 1
   
@@ -36,21 +37,22 @@ for file_index in range(1):
   #if the number of workstations isn't a perfect square, then we adjust for that by acting as if it is a subset of a larger square
   Reset_Val = N
 
-  list_of_columns = df.columns
+  list_of_columns = df.columns.values
   #creating a list of all the names of the columns
 
   column_count = len(list_of_columns)
   #finding how many columns there are, here 17
-  
-  df.insert(column_count, 'HBOS', [0.0]*row_count)
-  #creating a new column in the dataframe called HBOS, populating with 0.0
+  df.insert(column_count, "HBOS", [0.0]*row_count)
   df.insert(column_count + 1, 'Heights', [0.0]*row_count)
+  #print(column_count)
 
-  for var_index in range(3, column_count):
-    
+  for var_index in range(1, column_count):
+    #print("this is the dataframe after column: " + str(var_index - 1))
+    #print(df)
     df = df.sort_values(by = list_of_columns[var_index], ascending = True)
     #sorting the dataframe by the values of the variable in ascending order
 
+    print(df)
     N = Reset_Val
     bin_start = 0
     bin_end = N - 1
@@ -108,11 +110,13 @@ for file_index in range(1):
     max_height = max(df.Heights)
     #determining the value to normalize the height of each bin
     for x in range(row_count):
-      if df.iat[x, var_index] == 0:
+      if df.iat[x, var_index] == 0:       
        continue
+      df = df.sort_values(by = list_of_columns[var_index], ascending = True)
       height = df.at[x, "Heights"]
       n_height = height/max_height
       hbos = math.log10(1/n_height)
+      print("for the country: " + df.at[x, "Country"]+ " " + str(hbos))
       #normalizing the bin height, and then finding the HBOS score for this bin
       p_hbos = df.at[x, "HBOS"]
       df.at[x, "HBOS"] = p_hbos + hbos
@@ -120,6 +124,7 @@ for file_index in range(1):
 
 
   df = df.sort_values(by = "HBOS", ascending = False)
+  #print("this is the dataframe after column: " + str(var_index - 1))
   print(df)
   print("This is for the time interval " + timestamp)
   df.to_csv('HBOS_topten_fortime' + timestamp + '.csv')
