@@ -4,8 +4,10 @@ import matplotlib.pyplot as plt
 import matplotlib.font_manager
 import pandas as pd
 import math
+
 pd.set_option('display.max_rows', 2000)
-pd.set_option('display.max_columns', 30)
+#pd.set_option('display.max_columns', 30)
+
 for file_index in range(1):
   df = pd.read_csv("computer" + str(file_index) + ".csv")
   
@@ -20,17 +22,17 @@ for file_index in range(1):
 
   row_count = len(df)
   urow_count = row_count - 1
-  print("The number of rows in df is: " + str(row_count))
-
-  N = int(math.sqrt(row_count)) 
-  # N is the square root of the number of workstations, this is the variable to be changed based on the number of workstations when being scaled up for larger production
+  
+  N = int(math.sqrt(row_count))
+  # N is the square root of the number of workstations, this is the variable to be changed based
+  # on the number of workstations when being scaled up for larger production.
   # We want N to be an integer to simplify the math being done later
   # N is how many values go in each bin, except when there are > N of same value for a variable 
   
-  w = row_count % N
+  w = row_count / N
   #The modulo function divides row_count by N, returns remainder, if perfect square, will be 0. else, will be > 0.
-  if w > 0:
-    N = N + 1
+  if w != N :
+    N = N + 1 
   #if the number of workstations isn't a perfect square, then we adjust for that by acting as if it is a subset of a larger square
   Reset_Val = N
 
@@ -38,7 +40,7 @@ for file_index in range(1):
   #creating a list of all the names of the columns
 
   column_count = len(list_of_columns)
-  #finding how many columns there are, here 20
+  #finding how many columns there are, here 17
   
   df.insert(column_count, 'HBOS', [0.0]*row_count)
   #creating a new column in the dataframe called HBOS, populating with 0.0
@@ -46,10 +48,11 @@ for file_index in range(1):
     
     df = df.sort_values(by = list_of_columns[var_index], ascending = True)
     #sorting the dataframe by the values of the variable in ascending order
+
+    N = Reset_Val
     bin_start = 0
     bin_end = N - 1
-    N = Reset_Val
-    df.to_csv('HBOS for' + list_of_columns[var_index - 1])
+    #df.to_csv('HBOS for' + list_of_columns[var_index - 1])
 
     for x in range(row_count):
      if df.iat[x, var_index] == 0:
@@ -74,7 +77,7 @@ for file_index in range(1):
      
      g = df.iat[bin_end, var_index]
      j = df.iat[bin_start, var_index]
-     
+
      k = g - j
 
      if k == 0:
@@ -89,9 +92,8 @@ for file_index in range(1):
        g = df.iat[bin_end, var_index]
        j = df.iat[bin_start, var_index]
        k = g - j
-       
-       check_b = urow_count
-       check = df.iat[check_b, var_index]
+
+       check = df.iat[urow_count, var_index]
        if g == check:
          bin_end = urow_count
          N = bin_end - bin_start
