@@ -44,6 +44,8 @@ for file_index in range(1):
   
   df.insert(column_count, 'HBOS', [0.0]*row_count)
   #creating a new column in the dataframe called HBOS, populating with 0.0
+  df.insert(column_count + 1, 'Heights', [0.0]*row_count)
+
   for var_index in range(3, column_count):
     
     df = df.sort_values(by = list_of_columns[var_index], ascending = True)
@@ -101,12 +103,21 @@ for file_index in range(1):
        if k != 0:
          print("and ends at workstation "+ str(bin_end)+ " with a value of " + str(g))    
      
-     y = math.log10(k/N)
-     z = df.at[x, "HBOS"]
-     H_val = y + z
-     #doing the math to find the HBOS vallue by taking the base 10 logarithm of N times the difference of the values 
-     #of the end of the bin and the beginning of the bin and adding it to the previous value of the HBOS algorithm
-     df.at[x, "HBOS"] = H_val
+     y = N/k
+     df.at[x, "Heights"] = y
+    max_height = max(df.Heights)
+    #determining the value to normalize the height of each bin
+    for x in range(row_count):
+      if df.iat[x, var_index] == 0:
+       continue
+      height = df.at[x, "Heights"]
+      n_height = height/max_height
+      hbos = math.log10(1/n_height)
+      #normalizing the bin height, and then finding the HBOS score for this bin
+      p_hbos = df.at[x, "HBOS"]
+      df.at[x, "HBOS"] = p_hbos + hbos
+      #adding this HBOS score to the previous one
+
 
   df = df.sort_values(by = "HBOS", ascending = False)
   print(df)
