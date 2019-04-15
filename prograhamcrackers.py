@@ -8,7 +8,7 @@ import math
 pd.set_option('display.max_rows', 2000)
 #pd.set_option('display.max_columns', 30)
 
-for file_index in range(1):
+for file_index in range(1,2):
   df = pd.read_csv("computer" + str(file_index) + ".csv")
   
   #creating a loop to read files and assign them to dataframes with a value of x where x is the number of files
@@ -46,14 +46,13 @@ for file_index in range(1):
   df.insert(column_count + 1, 'Heights', [0.0]*row_count)
   #print(column_count)
 
-  for var_index in range(1, column_count):
+  for var_index in range(3, column_count):
     #print("this is the dataframe after column: " + str(var_index - 1))
     #print(df)
     df = df.sort_values(by = list_of_columns[var_index], ascending = True)
     #sorting the dataframe by the values of the variable in ascending order
 
     df = df.reset_index(drop = True)
-    print(df)
     N = Reset_Val
     bin_start = 0
     bin_end = N - 1
@@ -117,16 +116,16 @@ for file_index in range(1):
       height = df.at[x, "Heights"]
       n_height = height/max_height
       hbos = math.log10(1/n_height)
-      print("for the country: " + df.at[x, "Country"]+ " " + str(hbos))
       #normalizing the bin height, and then finding the HBOS score for this bin
       p_hbos = df.at[x, "HBOS"]
       df.at[x, "HBOS"] = p_hbos + hbos
       #adding this HBOS score to the previous one
 
 
+  df = df.drop(["Heights"], axis = 1)
   df = df.sort_values(by = "HBOS", ascending = False)
   #print("this is the dataframe after column: " + str(var_index - 1))
-  print(df)
-  print("This is for the time interval " + timestamp)
+  #print(df)
+  #print("This is for the time interval " + timestamp)
   df.to_csv('HBOS_topten_fortime' + timestamp + '.csv')
   
