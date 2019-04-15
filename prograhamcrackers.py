@@ -52,6 +52,7 @@ for file_index in range(1):
     df = df.sort_values(by = list_of_columns[var_index], ascending = True)
     #sorting the dataframe by the values of the variable in ascending order
 
+    df = df.reset_index(drop = True)
     print(df)
     N = Reset_Val
     bin_start = 0
@@ -63,7 +64,7 @@ for file_index in range(1):
        bin_start = x + 1
        bin_end = bin_end + 1
        continue
-     
+
      if x > bin_end:
        bin_start = bin_end
        N = Reset_Val
@@ -98,6 +99,7 @@ for file_index in range(1):
        k = g - j
 
        check = df.iat[urow_count, var_index]
+
        if g == check:
          bin_end = urow_count
          N = bin_end - bin_start
@@ -112,7 +114,6 @@ for file_index in range(1):
     for x in range(row_count):
       if df.iat[x, var_index] == 0:       
        continue
-      df = df.sort_values(by = list_of_columns[var_index], ascending = True)
       height = df.at[x, "Heights"]
       n_height = height/max_height
       hbos = math.log10(1/n_height)
