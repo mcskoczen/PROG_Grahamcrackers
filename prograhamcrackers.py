@@ -125,7 +125,7 @@ for file_index in range(1,2):
   df = df.drop(["Heights"], axis = 1)
   df = df.sort_values(by = "HBOS", ascending = False)
   #print("this is the dataframe after column: " + str(var_index - 1))
-  #print(df)
+  print(df)
   #print("This is for the time interval " + timestamp)
   df.to_csv('HBOS_topten_fortime' + timestamp + '.csv')
   
