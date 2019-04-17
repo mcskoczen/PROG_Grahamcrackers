@@ -8,19 +8,18 @@ import math
 pd.set_option('display.max_rows', 2000)
 #pd.set_option('display.max_columns', 30)
 
-for file_index in range(1,2):
-  df = pd.read_csv("computer" + str(file_index) + ".csv")
-  
+for file_index in range(1,4):
+  #df = pd.read_csv("computer" + str(file_index) + ".csv")
+  df = pd.read_csv("Ver" + str(file_index) + ".csv")
   #creating a loop to read files and assign them to dataframes with a value of x where x is the number of files
   #The loop is unnecessary if you aren't going to read in multiple sheets consecutively
   
-  heyyyy = '''minimum = df['X_timestamp'].min() * 0.0001
+  minimum = df['X_timestamp'].min() * 0.0001
   maximum = df["X_timestamp"].max() * 0.0001
   minimum = round(minimum, 3)
   maximum = round(maximum, 3)
-  timestamp = "between " + str(minimum) + " and " + str(maximum) + str(file_index)'''
+  timestamp = "between " + str(minimum) + " and " + str(maximum) + str(file_index)
 
-  timestamp = "1"
   row_count = len(df)
   urow_count = row_count - 1
   
@@ -124,8 +123,8 @@ for file_index in range(1,2):
 
   df = df.drop(["Heights"], axis = 1)
   df = df.sort_values(by = "HBOS", ascending = False)
-  #print("this is the dataframe after column: " + str(var_index - 1))
+  df = df.reset_index(drop = True)
   print(df)
-  #print("This is for the time interval " + timestamp)
+  print("This is for the time interval " + timestamp)
   df.to_csv('HBOS_topten_fortime' + timestamp + '.csv')
   
