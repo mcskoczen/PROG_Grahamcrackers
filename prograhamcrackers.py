@@ -6,7 +6,6 @@ import pandas as pd
 import math
 
 pd.set_option('display.max_rows', 2000)
-#pd.set_option('display.max_columns', 30)
 
 for file_index in range(1,4):
   #df = pd.read_csv("computer" + str(file_index) + ".csv")
@@ -43,24 +42,25 @@ for file_index in range(1,4):
   #finding how many columns there are, here 17
   df.insert(column_count, "HBOS", [0.0]*row_count)
   df.insert(column_count + 1, 'Heights', [0.0]*row_count)
-  #print(column_count)
 
   for var_index in range(3, column_count):
     #print("this is the dataframe after column: " + str(var_index - 1))
-    #print(df)
     df = df.sort_values(by = list_of_columns[var_index], ascending = True)
-    #sorting the dataframe by the values of the variable in ascending order
-
     df = df.reset_index(drop = True)
+    #sorting the dataframe by the values of the variable in ascending order
+    
     N = Reset_Val
     bin_start = 0
     bin_end = N - 1
-    #df.to_csv('HBOS for' + list_of_columns[var_index - 1])
+    #Setting the initial parameters and ensuring we always go into the loop with the correct numbers
 
     for x in range(row_count):
      if df.iat[x, var_index] == 0:
        bin_start = x + 1
        bin_end = bin_end + 1
+       #this is for the specific use case where the anomoly detection is being applied on computers, where a value
+       #of zero doesn't actually mean any value of anything, necesasarily, and instead means the computer isn't doing
+       #anything
        continue
 
      if x > bin_end:
@@ -74,18 +74,14 @@ for file_index in range(1,4):
      if bin_end > (urow_count):
        bin_end = urow_count
        N = bin_end - bin_start
-     #unless the last bin would try to call on values that don't exist
-     #setting the endpoint of the bin, minus 1 accounts for us having a row 0
+     #like if the last bin would try to call on values that don't exist
+     #setting the endpoint of the bin
      #bin_end is the workstation index whose value will be used in calculations
      
      g = df.iat[bin_end, var_index]
      j = df.iat[bin_start, var_index]
 
      k = g - j
-
-     if k == 0:
-       print("The problem bin is in the column labelled " + list_of_columns[var_index])
-       print("It starts at workstation " +str(bin_start) + " with a value of " + str(j))
       
 
      while k == 0:
@@ -101,14 +97,13 @@ for file_index in range(1,4):
        if g == check:
          bin_end = urow_count
          N = bin_end - bin_start
-
-       if k != 0:
-         print("and ends at workstation "+ str(bin_end)+ " with a value of " + str(g))    
+  
      
      y = N/k
      df.at[x, "Heights"] = y
+     #Finding the height of the histograms and assigning each variable that height
     max_height = max(df.Heights)
-    #determining the value to normalize the height of each bin
+    #determining the maximum height of a bin to normalize the height of every bin
     for x in range(row_count):
       if df.iat[x, var_index] == 0:       
        continue
@@ -122,9 +117,12 @@ for file_index in range(1,4):
 
 
   df = df.drop(["Heights"], axis = 1)
+  #dropping the heights column as it's only needed for the maths
   df = df.sort_values(by = "HBOS", ascending = False)
   df = df.reset_index(drop = True)
+  #resorting the data so that it goes from the largest HBOS value to the smallest
   print(df)
   print("This is for the time interval " + timestamp)
   df.to_csv('HBOS_topten_fortime' + timestamp + '.csv')
-  
+  #outputting the data to a comma separated value sheet with an additional column for the HBOS scores
+  #for further analysis
