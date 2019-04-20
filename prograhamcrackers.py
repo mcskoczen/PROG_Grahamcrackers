@@ -7,9 +7,9 @@ import math
 
 pd.set_option('display.max_rows', 2000)
 
-for file_index in range(1,4):
+for file_index in range(1,11):
   #df = pd.read_csv("computer" + str(file_index) + ".csv")
-  df = pd.read_csv("Ver" + str(file_index) + ".csv")
+  df = pd.read_csv("Time Interval " + str(file_index) + ".csv")
   #creating a loop to read files and assign them to dataframes with a value of x where x is the number of files
   #The loop is unnecessary if you aren't going to read in multiple sheets consecutively
   
@@ -71,13 +71,14 @@ for file_index in range(1,4):
      #bin_start is the workstation index whose value will be used in calculations
      #we always want the bin to contain 13 values, barring certain circumstances
 
-     if bin_end > (urow_count):
+     if bin_end >= (urow_count):
        bin_end = urow_count
        N = bin_end - bin_start
      #like if the last bin would try to call on values that don't exist
      #setting the endpoint of the bin
      #bin_end is the workstation index whose value will be used in calculations
-     
+     if bin_start >= urow_count:
+       continue
      g = df.iat[bin_end, var_index]
      j = df.iat[bin_start, var_index]
 
@@ -123,6 +124,6 @@ for file_index in range(1,4):
   #resorting the data so that it goes from the largest HBOS value to the smallest
   print(df)
   print("This is for the time interval " + timestamp)
-  df.to_csv('HBOS_topten_fortime' + timestamp + '.csv')
+  df.to_csv('HBOS Top Ten for Time ' + str(file_index) + '.csv')
   #outputting the data to a comma separated value sheet with an additional column for the HBOS scores
   #for further analysis
