@@ -1,4 +1,0 @@
-# PROG_Grahamcrackers
-PIC Math Team Repository
-
-The variables which got deleted were system diskio write bytes, system memory total, and system memory swap total, because there were so few unique values that it couldn't adequately be accounted for in the HBOS algorithm, having 1, 2, and 3 unique values respectively. It does throw off the algorithm a bit, as deleting these rows can cause anomalies to go unnoticed, and it did in fact do this for the first time interval, where the problem is fairly obviously a loose/missing stick of RAM. Unfortunately, due to the HBOS algorithm using logarithms, it is thrown off quite a bit by a large amount of repeated values, which would cause the algorithm to attempt to perform a logarithm of 0, which is mathematically impossible. The normal way to account for repeated values simply can't account for there only being 2 or 3 unique values, repeated tens of times.
